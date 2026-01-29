@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: application-defaults
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info"
+  health:
+    probes:
+      enabled: true
+
+logging:
+  level:
+    root: INFO
+    org.springframework.cloud: INFO
