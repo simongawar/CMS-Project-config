@@ -48,4 +48,4 @@ spring:
         - eth0
         - docker0
       preferred-networks:
-        - '192.168'
+        
