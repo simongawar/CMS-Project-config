@@ -6,6 +6,9 @@ server:
   port: 9090
 
 eureka:
+  instance:
+    hostname: apigateway
+    prefer-ip-address: true
   client:
     service-url:
       defaultZone: http://eureka-server:8761/eureka/
@@ -17,6 +20,9 @@ management:
     web:
       exposure:
         include: "*"
+  endpoint:
+    health:
+      show-details: always
 
 spring:
   security:
@@ -25,42 +31,47 @@ spring:
         jwt:
           issuer-uri: http://keycloak:8080/realms/cms-realm
 
-# Example Spring Cloud Gateway routes using Eureka (lb://)
 spring:
   cloud:
     gateway:
       routes:
-        - id: user-service
-          uri: lb://user-service
+        - id: userservice
+          uri: lb://userservice
           predicates:
-            - Path=/user-service/**
+            - Path=/userservice/**
           filters:
             - StripPrefix=1
 
-        - id: course-service
-          uri: lb://course-service
+        - id: courseservice
+          uri: lb://courseservice
           predicates:
-            - Path=/course-service/**
+            - Path=/courseservice/**
           filters:
             - StripPrefix=1
 
-        - id: notification-service
-          uri: lb://notification-service
+        - id: notificationservice
+          uri: lb://notificationservice
           predicates:
-            - Path=/notification-service/**
+            - Path=/notificationservice/**
           filters:
             - StripPrefix=1
 
-        - id: userassessment-service
-          uri: lb://userassessment-service
+        - id: userassessmentservice
+          uri: lb://userassessmentservice
           predicates:
-            - Path=/userassessment-service/**
+            - Path=/userassessmentservice/**
           filters:
             - StripPrefix=1
 
-        - id: analytics-service
-          uri: lb://analytics-service
+        - id: analyticsservice
+          uri: lb://analyticsservice
           predicates:
-            - Path=/analytics-service/**
+            - Path=/analyticsservice/**
           filters:
             - StripPrefix=1
+
+logging:
+  level:
+    org.springframework.cloud.gateway: INFO
+    org.springframework.security: INFO
+    org.springframework.web: INFO
