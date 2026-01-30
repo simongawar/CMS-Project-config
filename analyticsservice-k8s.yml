@@ -19,7 +19,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: "health,info,metrics"
+        include: health,info,metrics
   endpoint:
     health:
       show-details: always
@@ -48,4 +48,4 @@ spring:
         - eth0
         - docker0
       preferred-networks:
-        - '192.168'
+        
