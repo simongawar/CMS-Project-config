@@ -1,6 +1,9 @@
+server:
+  port: 8080
+
 spring:
   application:
-    name: cloakresourceserver
+    name: cloak-resource-server
 
   security:
     oauth2:
@@ -12,16 +15,13 @@ spring:
     compatibility-verifier:
       enabled: false
 
-server:
-  port: 8090
-
 eureka:
   instance:
-    hostname: cloakresourceserver
+    hostname: cloak-resource-server
     prefer-ip-address: true
   client:
     service-url:
-      defaultZone: http://eurekaserver:8761/eureka/
+      defaultZone: http://eurekaserver.cms.svc.cluster.local:8761/eureka/
     fetch-registry: true
     register-with-eureka: true
 
