@@ -2,6 +2,26 @@ spring:
   application:
     name: notificationservice
 
+  datasource:
+    url: ${DB_URL_NOTIFICATION}
+    username: ${DB_USERNAME_NOTIFICATION}
+    password: ${DB_PASSWORD_NOTIFICATION}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://keycloak:8080/realms/cms-realm
+
 server:
   port: 0
 
@@ -11,7 +31,7 @@ eureka:
     prefer-ip-address: true
   client:
     service-url:
-      defaultZone: http://eureka-server:8761/eureka/
+      defaultZone: http://eurekaserver:8761/eureka/
     register-with-eureka: true
     fetch-registry: true
 
@@ -19,33 +39,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: "health,info,metrics"
+        include: health,info,metrics
   endpoint:
     health:
       show-details: always
-
-spring:
-  datasource:
-    url: jdbc:mysql://mysql:3306/notification_service_db?useSSL=false&serverTimezone=UTC
-    username: root
-    password: root@2025db
-    driver-class-name: com.mysql.cj.jdbc.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://keycloak:8080/realms/cms-realm
-  cloud:
-    inetutils:
-      ignored-interfaces:
-        - eth0
-        - docker0
-      preferred-networks:
-        
