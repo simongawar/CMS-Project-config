@@ -1,6 +1,6 @@
 spring:
   application:
-    name: cloak-resource-server
+    name: cloakresourceserver
 
   security:
     oauth2:
@@ -17,11 +17,11 @@ server:
 
 eureka:
   instance:
-    hostname: cloak-resource-server
+    hostname: cloakresourceserver
     prefer-ip-address: true
   client:
     service-url:
-      defaultZone: http://eureka-server:8761/eureka/
+      defaultZone: http://eurekaserver:8761/eureka/
     fetch-registry: true
     register-with-eureka: true
 
