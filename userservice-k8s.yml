@@ -6,9 +6,9 @@ spring:
     import: optional:configserver:http://configserver:8071
 
   datasource:
-    url: jdbc:mysql://mysql:3306/user_service_db?useSSL=false&serverTimezone=UTC&characterEncoding=utf8
-    username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:root@2025db}
+    url: ${DB_URL_USER}
+    username: ${DB_USERNAME_USER}
+    password: ${DB_PASSWORD_USER}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -34,18 +34,18 @@ spring:
         jwt:
           issuer-uri: http://keycloak:8080/realms/cms-realm
 
+server:
+  port: 0
+
 eureka:
   instance:
     hostname: userservice
     prefer-ip-address: true
   client:
     service-url:
-      defaultZone: http://eureka-server:8761/eureka/
+      defaultZone: http://eurekaserver:8761/eureka/
     register-with-eureka: true
     fetch-registry: true
-
-server:
-  port: 0
 
 management:
   endpoints:
