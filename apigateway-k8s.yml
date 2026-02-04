@@ -1,37 +1,19 @@
+server:
+  port: 9091
+
 spring:
   application:
     name: apigateway
 
-server:
-  port: 9090
+  config:
+    import: optional:configserver:http://configserver:8071
 
-eureka:
-  instance:
-    hostname: apigateway
-    prefer-ip-address: true
-  client:
-    service-url:
-      defaultZone: http://eureka-server:8761/eureka/
-    register-with-eureka: true
-    fetch-registry: true
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  endpoint:
-    health:
-      show-details: always
-
-spring:
   security:
     oauth2:
       resourceserver:
         jwt:
           issuer-uri: http://keycloak:8080/realms/cms-realm
 
-spring:
   cloud:
     gateway:
       routes:
@@ -69,6 +51,25 @@ spring:
             - Path=/analyticsservice/**
           filters:
             - StripPrefix=1
+
+eureka:
+  instance:
+    hostname: apigateway
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://eurekaserver:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
 
 logging:
   level:
