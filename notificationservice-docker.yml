@@ -1,0 +1,75 @@
+# --- Notification Service Application Configuration (Docker) ---
+
+server:
+  port: 8085
+
+spring:
+  application:
+    name: notificationservice
+
+  # CONFIG SERVER CONNECTION
+  config:
+    import: optional:configserver:http://configserver:8071
+
+  # DATABASE CONFIGURATION (use secret variables from .env)
+  datasource:
+    url: ${DB_URL_NOTIFICATION}
+    username: ${DB_USERNAME_NOTIFICATION}
+    password: ${DB_PASSWORD_NOTIFICATION}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # JPA/Hibernate Configuration
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+  # SPRING SECURITY - OAUTH2 RESOURCE SERVER
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://keycloak:8080/realms/cms-realm
+
+  # SPRING CLOUD NETWORKING CONFIGURATION
+  cloud:
+    inetutils:
+      ignored-interfaces:
+        - docker0
+        - lo
+
+# ----------------------------------------------------
+# EUREKA CLIENT CONFIGURATION (Docker Compose DNS)
+# ----------------------------------------------------
+eureka:
+  instance:
+    hostname: notificationservice
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://eurekaserver:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+# ----------------------------------------------------
+# ACTUATOR (HEALTH CHECK) CONFIGURATION
+# ----------------------------------------------------
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics
+  endpoint:
+    health:
+      show-details: always
+
+# ----------------------------------------------------
+# LOGGING CONFIGURATION
+# ----------------------------------------------------
+logging:
+  level:
+    org.springframework.security: INFO
+    org.springframework.web: INFO
