@@ -1,3 +1,5 @@
+# --- User Service Application Configuration (K8s) ---
+
 server:
   port: 8082
 
@@ -5,15 +7,18 @@ spring:
   application:
     name: userservice
 
+  # CONFIG SERVER CONNECTION
   config:
     import: optional:configserver:http://configserver:8071
 
+  # DATABASE CONFIGURATION (use secret variables from cms-secrets)
   datasource:
     url: ${DB_URL_USER}
     username: ${DB_USERNAME_USER}
     password: ${DB_PASSWORD_USER}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+  # JPA/Hibernate Configuration
   jpa:
     hibernate:
       ddl-auto: update
@@ -22,6 +27,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
 
+  # MAIL CONFIGURATION
   mail:
     host: ${MAIL_HOST:smtp.gmail.com}
     port: ${MAIL_PORT:587}
@@ -31,12 +37,16 @@ spring:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
 
+  # SPRING SECURITY - OAUTH2 RESOURCE SERVER
   security:
     oauth2:
       resourceserver:
         jwt:
           issuer-uri: http://keycloak:8080/realms/cms-realm
 
+# ----------------------------------------------------
+# EUREKA CLIENT CONFIGURATION (Kubernetes DNS)
+# ----------------------------------------------------
 eureka:
   instance:
     hostname: userservice
@@ -47,15 +57,21 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
 
+# ----------------------------------------------------
+# ACTUATOR (HEALTH CHECK) CONFIGURATION
+# ----------------------------------------------------
 management:
   endpoints:
     web:
       exposure:
-        include: health,info
+        include: health, info
   endpoint:
     health:
       show-details: when_authorized
 
+# ----------------------------------------------------
+# LOGGING CONFIGURATION
+# ----------------------------------------------------
 logging:
   level:
     org.springframework.security: INFO
