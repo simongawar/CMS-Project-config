@@ -1,3 +1,5 @@
+# --- Eureka Server Application Configuration (K8s) ---
+
 server:
   port: 8761
 
@@ -5,6 +7,9 @@ spring:
   application:
     name: eurekaserver
 
+# ----------------------------------------------------
+# EUREKA SERVER CONFIGURATION
+# ----------------------------------------------------
 eureka:
   client:
     register-with-eureka: false
@@ -12,15 +17,21 @@ eureka:
   server:
     wait-time-in-ms-when-sync-empty: 0
 
+# ----------------------------------------------------
+# ACTUATOR (HEALTH CHECK) CONFIGURATION
+# ----------------------------------------------------
 management:
   endpoints:
     web:
       exposure:
-        include: health,info
+        include: health, info
   endpoint:
     health:
       show-details: always
 
+# ----------------------------------------------------
+# LOGGING CONFIGURATION
+# ----------------------------------------------------
 logging:
   level:
     org.springframework.web: INFO
