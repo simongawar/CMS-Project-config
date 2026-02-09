@@ -1,0 +1,88 @@
+# --- User Service Application Configuration (Docker) ---
+
+server:
+  port: 8082
+
+spring:
+  application:
+    name: userservice
+
+  # CONFIG SERVER CONNECTION
+  config:
+    import: optional:configserver:http://configserver:8071
+
+  # SPRING CLOUD CONFIG RETRY (Docker environment)
+  cloud:
+    config:
+      fail-fast: true
+      retry:
+        max-attempts: 10
+        initial-interval: 1000
+        max-interval: 5000
+        multiplier: 1.5
+
+  # DATABASE CONFIGURATION (use secret variables from .env)
+  datasource:
+    url: ${DB_URL_USER}
+    username: ${DB_USERNAME_USER}
+    password: ${DB_PASSWORD_USER}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # JPA/Hibernate Configuration
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+  # MAIL CONFIGURATION
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+
+  # SPRING SECURITY - OAUTH2 RESOURCE SERVER
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://keycloak:8080/realms/cms-realm
+
+# ----------------------------------------------------
+# EUREKA CLIENT CONFIGURATION (Docker Compose DNS)
+# ----------------------------------------------------
+eureka:
+  instance:
+    hostname: userservice
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://eurekaserver:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+# ----------------------------------------------------
+# ACTUATOR (HEALTH CHECK) CONFIGURATION
+# ----------------------------------------------------
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+  endpoint:
+    health:
+      show-details: when_authorized
+
+# ----------------------------------------------------
+# LOGGING CONFIGURATION
+# ----------------------------------------------------
+logging:
+  level:
+    org.springframework.security: INFO
+    org.springframework.web: INFO
