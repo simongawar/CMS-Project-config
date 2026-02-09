@@ -1,3 +1,5 @@
+# --- Course Service Application Configuration (K8s) ---
+
 server:
   port: 8083
 
@@ -5,15 +7,18 @@ spring:
   application:
     name: courseservice
 
+  # CONFIG SERVER CONNECTION
   config:
     import: optional:configserver:http://configserver:8071
 
+  # DATABASE CONFIGURATION (use secret variables from cms-secrets)
   datasource:
     url: ${DB_URL_COURSE}
     username: ${DB_USERNAME_COURSE}
     password: ${DB_PASSWORD_COURSE}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+  # JPA/Hibernate Configuration
   jpa:
     hibernate:
       ddl-auto: update
@@ -22,12 +27,16 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
 
+  # SPRING SECURITY - OAUTH2 RESOURCE SERVER
   security:
     oauth2:
       resourceserver:
         jwt:
           issuer-uri: http://keycloak:8080/realms/cms-realm
 
+# ----------------------------------------------------
+# EUREKA CLIENT CONFIGURATION (Kubernetes DNS)
+# ----------------------------------------------------
 eureka:
   instance:
     hostname: courseservice
@@ -38,6 +47,9 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
 
+# ----------------------------------------------------
+# ACTUATOR (HEALTH CHECK) CONFIGURATION
+# ----------------------------------------------------
 management:
   endpoints:
     web:
@@ -47,6 +59,9 @@ management:
     health:
       show-details: always
 
+# ----------------------------------------------------
+# LOGGING CONFIGURATION
+# ----------------------------------------------------
 logging:
   level:
     org.springframework.security: INFO
