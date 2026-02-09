@@ -13,38 +13,38 @@ This illustrate the configserver deployment configuration for client services.
 
 ### **User Service (`userservice-k8s.yml`)**
 - Runs on random port (`server.port: 0`)
-- Connects to `user_service_db`
+- Connects to `userservicedb`
 - Registers with Eureka
 - Validates JWTs via Keycloak
 
 ### **Course Service (`courseservice-k8s.yml`)**
-- Connects to `course_service_db`
+- Connects to `courseservicedb`
 - Registers with Eureka
 - JWT validation enabled
 
 ### **Notification Service (`notificationservice-k8s.yml`)**
-- Connects to `notification_service_db`
+- Connects to `notificationservicedb`
 - Registers with Eureka
 - JWT validation enabled
 
 ### **User Assessment Service (`userassessmentservice-k8s.yml`)**
-- Connects to `userassessment_service_db`
+- Connects to `userassessmentservicedb`
 - Registers with Eureka
 - JWT validation enabled
 
 ### **Analytics Service (`analyticsservice-k8s.yml`)**
-- Connects to `analytics_service_db`
+- Connects to `analyticsservicedb`
 - Registers with Eureka
 - JWT validation enabled
 
 ### **API Gateway (`apigateway-k8s.yml`)**
-- Runs on port `9090`
+- Runs on port `9091`
 - Registers with Eureka
 - Validates JWTs via Keycloak
 - Defines routes to all microservices using `lb://{service}` URIs
 
 ### **Cloak Resource Server (`cloak-resource-server.yml`)**
-- Runs on port `8090`
+- Runs on port `8080`
 - Registers with Eureka
 - Validates JWTs via Keycloak
 - CORS allowed origins: `http://localhost:3000`, `http://localhost:4200`
