@@ -1,0 +1,68 @@
+# --- Course Service Application Configuration (Docker) ---
+
+server:
+  port: 8083
+
+spring:
+  application:
+    name: courseservice
+
+  # CONFIG SERVER CONNECTION
+  config:
+    import: optional:configserver:http://configserver:8071
+
+  # DATABASE CONFIGURATION (use secret variables from .env)
+  datasource:
+    url: ${DB_URL_COURSE}
+    username: ${DB_USERNAME_COURSE}
+    password: ${DB_PASSWORD_COURSE}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # JPA/Hibernate Configuration
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+  # SPRING SECURITY - OAUTH2 RESOURCE SERVER
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://keycloak:8080/realms/cms-realm
+
+# ----------------------------------------------------
+# EUREKA CLIENT CONFIGURATION (Docker Compose DNS)
+# ----------------------------------------------------
+eureka:
+  instance:
+    hostname: courseservice
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://eurekaserver:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+# ----------------------------------------------------
+# ACTUATOR (HEALTH CHECK) CONFIGURATION
+# ----------------------------------------------------
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics
+  endpoint:
+    health:
+      show-details: always
+
+# ----------------------------------------------------
+# LOGGING CONFIGURATION
+# ----------------------------------------------------
+logging:
+  level:
+    org.springframework.security: INFO
+    org.springframework.web: INFO
