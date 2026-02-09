@@ -1,3 +1,5 @@
+# --- API Gateway Application Configuration (K8s) ---
+
 server:
   port: 9091
 
@@ -5,15 +7,18 @@ spring:
   application:
     name: apigateway
 
+  # CONFIG SERVER CONNECTION
   config:
     import: optional:configserver:http://configserver:8071
 
+  # SPRING SECURITY - OAUTH2 RESOURCE SERVER
   security:
     oauth2:
       resourceserver:
         jwt:
           issuer-uri: http://keycloak:8080/realms/cms-realm
 
+  # SPRING CLOUD GATEWAY ROUTES
   cloud:
     gateway:
       routes:
@@ -52,6 +57,9 @@ spring:
           filters:
             - StripPrefix=1
 
+# ----------------------------------------------------
+# EUREKA CLIENT CONFIGURATION (Kubernetes DNS)
+# ----------------------------------------------------
 eureka:
   instance:
     hostname: apigateway
@@ -62,6 +70,9 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
 
+# ----------------------------------------------------
+# ACTUATOR (HEALTH CHECK) CONFIGURATION
+# ----------------------------------------------------
 management:
   endpoints:
     web:
@@ -71,6 +82,9 @@ management:
     health:
       show-details: always
 
+# ----------------------------------------------------
+# LOGGING CONFIGURATION
+# ----------------------------------------------------
 logging:
   level:
     org.springframework.cloud.gateway: INFO
