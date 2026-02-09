@@ -1,0 +1,93 @@
+# --- API Gateway Application Configuration (Docker) ---
+
+server:
+  port: 9091
+
+spring:
+  application:
+    name: apigateway
+
+  # CONFIG SERVER CONNECTION
+  config:
+    import: optional:configserver:http://configserver:8071
+
+  # SPRING CLOUD GATEWAY ROUTES
+  cloud:
+    gateway:
+      routes:
+        # ✅ Consistent service IDs (no hyphens)
+        - id: userservice
+          uri: lb://userservice
+          predicates:
+            - Path=/userservice/**
+          filters:
+            - StripPrefix=1
+
+        - id: courseservice
+          uri: lb://courseservice
+          predicates:
+            - Path=/courseservice/**
+          filters:
+            - StripPrefix=1
+
+        - id: notificationservice
+          uri: lb://notificationservice
+          predicates:
+            - Path=/notificationservice/**
+          filters:
+            - StripPrefix=1
+
+        - id: userassessmentservice
+          uri: lb://userassessmentservice
+          predicates:
+            - Path=/userassessmentservice/**
+          filters:
+            - StripPrefix=1
+
+        - id: analyticsservice
+          uri: lb://analyticsservice
+          predicates:
+            - Path=/analyticsservice/**
+          filters:
+            - StripPrefix=1
+
+  # SPRING SECURITY - OAUTH2 RESOURCE SERVER
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://keycloak:8080/realms/cms-realm
+
+# ----------------------------------------------------
+# EUREKA CLIENT CONFIGURATION (Docker Compose DNS)
+# ----------------------------------------------------
+eureka:
+  instance:
+    hostname: apigateway
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://eurekaserver:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+# ----------------------------------------------------
+# ACTUATOR (HEALTH CHECK) CONFIGURATION
+# ----------------------------------------------------
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+# ----------------------------------------------------
+# LOGGING CONFIGURATION
+# ----------------------------------------------------
+logging:
+  level:
+    org.springframework.cloud.gateway: INFO
+    org.springframework.security: INFO
+    org.springframework.web: INFO
